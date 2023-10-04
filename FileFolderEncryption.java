@@ -4,8 +4,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 
 public class FileFolderEncryption {
 
@@ -22,6 +21,9 @@ public class FileFolderEncryption {
         zipFolder(folder, zipFilePath);
 
         encryptFile(new File(zipFilePath), key);
+
+        // Delete the original unencrypted folder after encryption
+        deleteFolder(folder);
     }
 
     public static void decryptFolder(File encryptedZipFile, int key) throws IOException {
@@ -99,6 +101,19 @@ public class FileFolderEncryption {
 
     public static void decryptFile(File file, int key) {
         encryptFile(file, key);
+    }
+
+    private static void deleteFolder(File folder) {
+        if (folder.isDirectory()) {
+            File[] files = folder.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    deleteFolder(file);
+                }
+            }
+        }
+        // Delete the folder itself
+        folder.delete();
     }
 
     public static void main(String[] args) {
